@@ -40,29 +40,28 @@ router.get("/", (req, res, next) => {
         for(let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)){
             let flights = [];
             let occupiedSeats = [];
-            for(let j = 0; j < ticketsInRange.length && ticketsInRange[j].flightDate <= i; j ++) {
+            for(let j = 0; j < ticketsInRange.length; j ++) {
                 if(ticketsInRange[j] === i) {
-                    let sameFlight = false;
-                    let k = j, revenue = 0;
-                    for(; k < (ticketsInRange.length - 1); k ++) {
-                        if(ticketsInRange[k].flightNumber === ticketsInRange[k + 1].flightNumber) {
-                            sameFlight = true;
-                            occupiedSeats.push(ticketsInRange[k].seatNumber);
+                    for(let k = j; k < ticketsInRange.length ; k ++) {
+                        for(let f = k + 1; f < ticketsInRange.length; f ++) {
+                            if( ticketsInRange[k].date 
+                                ticketsInRange[k].flightNumber === ticketsInRange[f].flightNumber) {
+                                occupiedSeats.
+                            }
                         }
                     }
-                    if(sameFlight) {
-                        occupiedSeats.push(ticketsInRange[k + 1].seatNumber);
-                    }
-                    flights.push({flightNumber: ticketsInRange[j].flightNumber, revenue: ticketsInRange[j].ticketCost});
-                } else {
-
+                    flights.push({flightNumber: ticketsInRange[j].flightNumber, revenue: total});
+                }
+                if(ticketsInRange[j].flightDate > i) {
+                    break;
                 }
             }
+            result["dates"].push({date: i, flights: flights});
         }
 
 
 
-        res.json({"status": "success"});
+        res.json(result);
     } catch (err) {
         next(err);
     }
