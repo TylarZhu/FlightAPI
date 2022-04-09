@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 app.use((req, res, next) => {
-    console.log("HTTP request", req.method, req.url);
+    // console.log("HTTP request", req.method, req.url);
     next();
 });
 

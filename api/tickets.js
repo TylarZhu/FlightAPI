@@ -28,7 +28,7 @@ router.post("/", async (req, res, next) => {
 
             tickets.push(req.body.event);
             quickSort(0, tickets.length - 1);
-            console.log(tickets);
+            // console.log(tickets);
         } else {
             return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
         }
