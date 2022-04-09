@@ -42,8 +42,8 @@ const getDateRange = (start, end) => {
     }
     // console.log({start:i, end:j});
     let result = tickets.slice(i, j + 1);
-    console.log("getDateRange: ");
-    console.log(result); 
+    // console.log("getDateRange: ");
+    // console.log(result); 
     return result;
 }
 

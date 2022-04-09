@@ -35,33 +35,35 @@ router.get("/", (req, res, next) => {
         let ticketsInRange = getDateRange(startDate, endDate);
         let result = [];
 
-        result["dates"] = [];
-
         for(let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)){
             let flights = [];
-            let occupiedSeats = [];
+            
             for(let j = 0; j < ticketsInRange.length; j ++) {
-                if(ticketsInRange[j] === i) {
-                    for(let k = j; k < ticketsInRange.length ; k ++) {
-                        for(let f = k + 1; f < ticketsInRange.length; f ++) {
-                            if( ticketsInRange[k].date 
-                                ticketsInRange[k].flightNumber === ticketsInRange[f].flightNumber) {
-                                occupiedSeats.
-                            }
+                if(ticketsInRange[j].flightDate.getTime() === i.getTime()) {
+                    let occupiedSeats = [];
+                    let total = ticketsInRange[j].ticketCost;
+                    let sameFlight = false;
+                    let k = j + 1;
+                    occupiedSeats.push(ticketsInRange[j].seatNumber);
+
+                    for(; k < ticketsInRange.length ; k ++) {
+                        if(ticketsInRange[j].flightDate.getTime() === ticketsInRange[k].flightDate.getTime() &&
+                            ticketsInRange[j].flightNumber === ticketsInRange[k].flightNumber) {
+                            total += ticketsInRange[k].ticketCost;
+                            occupiedSeats.push(ticketsInRange[k].seatNumber);
+                            sameFlight = true;
                         }
                     }
-                    flights.push({flightNumber: ticketsInRange[j].flightNumber, revenue: total});
-                }
-                if(ticketsInRange[j].flightDate > i) {
-                    break;
+
+                    flights.push({flightNumber: ticketsInRange[j].flightNumber, revenue: total, occupiedSeats: occupiedSeats});
+                    if(sameFlight) {
+                        j = k;
+                    }
                 }
             }
-            result["dates"].push({date: i, flights: flights});
+            result.push({date: new Date(i), flights: flights});
         }
-
-
-
-        res.json(result);
+        res.json({"dates": result});
     } catch (err) {
         next(err);
     }
