@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const url = "mongodb://localhost:27017/face2face";
+const url = "mongodb://localhost:27017/FlightAPI";
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 

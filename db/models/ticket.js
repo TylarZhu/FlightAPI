@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 let ticket = new mongoose.Schema({
     ticketId: Number,
     flightDate: Date,
-    flightNumber: Number,
-    seatNumber: Number,
+    flightNumber: String,
+    seatNumber: String,
     ticketCost: Number
 });
 
