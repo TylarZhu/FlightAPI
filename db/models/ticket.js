@@ -8,25 +8,19 @@ let ticket = new mongoose.Schema({
     ticketCost: Number
 });
 
-let Ticket = mongoose.model('Tickets', ticket);
+const Ticket = mongoose.model('Tickets', ticket);
 
 Ticket.findInRange = (startDate, endDate) => {
-    Ticket.find({
+    return Ticket.find({
         flightDate: {
             $gte: new Date(startDate), 
-            $lt: new Date(endDate)
+            $lte: new Date(endDate)
         }
     }, (err, doc) => {
         if(err) return {err: err};
         return doc;
     });
 
-}
-
-Ticket.findByTicketId = (ticketId) => {
-    return Ticket.findOne({ticketId: ticketId}, (err) => {
-        if(err) return console.log(err);
-    });
 }
 
 module.exports = Ticket;

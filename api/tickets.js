@@ -1,14 +1,12 @@
 const router = require("express").Router();
-const tickets = require("../db/ticket");
+const ticket = require("../db/models");
 const bodyParser = require('body-parser');
 const {quickSort, getDateRange, convertDate} = require("./helpFuntions");
-
-const Tickets = require("../db/models");
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-router.post("/", async (req, res, next) => {
+router.post("/", (req, res, next) => {
     try {
         let {ticketId, flightDate, flightNumber, seatNumber, ticketCost} = req.body.event;
         if(!ticketId || !flightDate || !flightNumber || !seatNumber || !ticketCost) {
@@ -17,35 +15,53 @@ router.post("/", async (req, res, next) => {
 
         flightDate = req.body.event.flightDate = convertDate(flightDate);
 
-
+        // console.log(Ticket.findByTicketId(ticketId));
         // if(!binarySearchId(req.body.event, 0 , tickets.length - 1)) {
-        console.log(Tickets.findByTicketId(ticketId));
-        if(!Tickets.findByTicketId(ticketId)){
-            Tickets.create(req.body.event, async (err, obj) => {
-                if(err) return res.status(500).json({err: err.message});
-                // let result = await Tickets.findInRange(flightDate, flightDate);
-                console.log(result);
-                return res.json({"status": "success"});
-            });
-            // let result = getDateRange(flightDate, flightDate);
-            
-            // for(let i = 0; i < result.length; i ++) {
-            //     if(result[i].flightDate.getTime() === flightDate.getTime() &&
-            //         result[i].flightNumber === flightNumber && 
-            //         result[i].seatNumber === seatNumber){
-            //         return res.status(400).json({"status": "failed", "reason": "seatNumber already taken"}); 
-            //     }
-            // }
+        ticket.findOne({ticketId: ticketId}, (err, obj) => {
+            if(err) return {err: err};
+            console.log(obj);
+            if(!obj) {
+                ticket.find({flightDate: flightDate}, (err, doc) => {
+                    console.log(doc);
+                    if(err) return res.status(400).json({err: err});
+                    for(let i = 0; i < doc.length; i ++) {
+                        if(doc[i].flightDate.getTime() === flightDate.getTime() &&
+                        doc[i].flightNumber === flightNumber && 
+                        doc[i].seatNumber === seatNumber){
+                            return res.status(400).json({"status": "failed", "reason": "seatNumber already taken"}); 
+                        }
+                    }
 
-            // tickets.push(req.body.event);
-            // quickSort(0, tickets.length - 1);
+                    ticket.create(req.body.event, async (err, obj) => {
+                        if(err) return res.status(400).json({err: err.message});
+                        return res.json({"status": "success"});
+                    });
+                });
+            } else {
+                return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
+            }
+        });
+        // if(!result){
+
+        //     // let result = getDateRange(flightDate, flightDate);
+            
+        //     // for(let i = 0; i < result.length; i ++) {
+        //     //     if(result[i].flightDate.getTime() === flightDate.getTime() &&
+        //     //         result[i].flightNumber === flightNumber && 
+        //     //         result[i].seatNumber === seatNumber){
+        //     //         return res.status(400).json({"status": "failed", "reason": "seatNumber already taken"}); 
+        //     //     }
+        //     // }
+
+        //     // tickets.push(req.body.event);
+        //     // quickSort(0, tickets.length - 1);
 
 
         
-            // console.log(tickets);
-        } else {
-            return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
-        }
+        //     // console.log(tickets);
+        // } else {
+        //     return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
+        // }
     } catch (err) {
         next(err);
     }
