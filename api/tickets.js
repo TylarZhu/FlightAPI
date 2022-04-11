@@ -16,13 +16,11 @@ router.post("/", (req, res, next) => {
         flightDate = req.body.event.flightDate = convertDate(flightDate);
 
         // console.log(Ticket.findByTicketId(ticketId));
-        // if(!binarySearchId(req.body.event, 0 , tickets.length - 1)) {
+        
         ticket.findOne({ticketId: ticketId}, (err, obj) => {
             if(err) return {err: err};
-            console.log(obj);
             if(!obj) {
                 ticket.find({flightDate: flightDate}, (err, doc) => {
-                    console.log(doc);
                     if(err) return res.status(400).json({err: err});
                     for(let i = 0; i < doc.length; i ++) {
                         if(doc[i].flightDate.getTime() === flightDate.getTime() &&
@@ -34,31 +32,29 @@ router.post("/", (req, res, next) => {
 
                     ticket.create(req.body.event, async (err, obj) => {
                         if(err) return res.status(400).json({err: err.message});
-                        return res.json({"status": "success"});
+                        res.json({"status": "success"});
                     });
                 });
             } else {
                 return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
             }
         });
-        // if(!result){
+       // if(!binarySearchId(req.body.event, 0 , tickets.length - 1)) {
 
-        //     // let result = getDateRange(flightDate, flightDate);
+            // let result = getDateRange(flightDate, flightDate);
             
-        //     // for(let i = 0; i < result.length; i ++) {
-        //     //     if(result[i].flightDate.getTime() === flightDate.getTime() &&
-        //     //         result[i].flightNumber === flightNumber && 
-        //     //         result[i].seatNumber === seatNumber){
-        //     //         return res.status(400).json({"status": "failed", "reason": "seatNumber already taken"}); 
-        //     //     }
-        //     // }
+            // for(let i = 0; i < result.length; i ++) {
+            //     if(result[i].flightDate.getTime() === flightDate.getTime() &&
+            //         result[i].flightNumber === flightNumber && 
+            //         result[i].seatNumber === seatNumber){
+            //         return res.status(400).json({"status": "failed", "reason": "seatNumber already taken"}); 
+            //     }
+            // }
 
-        //     // tickets.push(req.body.event);
-        //     // quickSort(0, tickets.length - 1);
+            // tickets.push(req.body.event);
+            // quickSort(0, tickets.length - 1);
 
-
-        
-        //     // console.log(tickets);
+            // console.log(tickets);
         // } else {
         //     return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
         // }
