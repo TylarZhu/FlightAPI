@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const url = "mongodb://localhost:27017/FlightAPI";
+//mongodb://localhost:27017/DatabaseName for nodeJS < 7.0
+const url = "mongodb://127.0.0.1:27017/FlightAPI";
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 
