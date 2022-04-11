@@ -1,5 +1,6 @@
 const app = require("../app");
 const http = require("http");
+const db = require("../db/db.js");
 
 const PORT = 3000;
 app.set("port", PORT);

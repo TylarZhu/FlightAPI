@@ -17,12 +17,15 @@ router.post("/", async (req, res, next) => {
 
         flightDate = req.body.event.flightDate = convertDate(flightDate);
 
-        if(!binarySearchId(req.body.event, 0 , tickets.length - 1)) {
-            Tickets.create(req.body.event, async (err, obj) => {
-                if(err) return res.status(500).json({err: "Db error!"});
 
-                let result = await Tickets.findInRange(flightDate, flightDate);
+        // if(!binarySearchId(req.body.event, 0 , tickets.length - 1)) {
+        console.log(Tickets.findByTicketId(ticketId));
+        if(!Tickets.findByTicketId(ticketId)){
+            Tickets.create(req.body.event, async (err, obj) => {
+                if(err) return res.status(500).json({err: err.message});
+                // let result = await Tickets.findInRange(flightDate, flightDate);
                 console.log(result);
+                return res.json({"status": "success"});
             });
             // let result = getDateRange(flightDate, flightDate);
             
@@ -43,7 +46,6 @@ router.post("/", async (req, res, next) => {
         } else {
             return res.status(400).json({"status": "failed", "reason": "ticketId already exists"});
         }
-        res.json({"status": "success"});
     } catch (err) {
         next(err);
     }

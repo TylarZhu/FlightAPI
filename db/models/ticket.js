@@ -8,7 +8,7 @@ let ticket = new mongoose.Schema({
     ticketCost: Number
 });
 
-let Ticket = mongoose.model('Users', ticket);
+let Ticket = mongoose.model('Tickets', ticket);
 
 Ticket.findInRange = (startDate, endDate) => {
     Ticket.find({
@@ -21,6 +21,12 @@ Ticket.findInRange = (startDate, endDate) => {
         return doc;
     });
 
+}
+
+Ticket.findByTicketId = (ticketId) => {
+    return Ticket.findOne({ticketId: ticketId}, (err) => {
+        if(err) return console.log(err);
+    });
 }
 
 module.exports = Ticket;
